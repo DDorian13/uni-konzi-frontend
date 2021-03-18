@@ -1,0 +1,66 @@
+html, body {
+    height: 100%;
+}
+
+html > body {
+    background-image: url('frontend_background.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    width: 100%;
+}
+
+.header {
+    background-color: #A7D2CB;
+    font-size: 16pt;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.loginName > a {
+    font-size: 14pt;
+    padding-left: 1em;
+    color: #444444;
+}
+
+.loginName > a:hover {
+    color: black;
+}
+
+.tableList {
+    margin: 3%;
+}
+
+.paginationMain {
+    display: flex;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.paginationMain > Button, .paginationMain > span {
+    font-size: 1.1em;
+    margin: 0.7em;
+    padding: 0.3em;
+    font-weight: bold;
+    background: none;
+    color: black;
+    border: none;
+}
+
+.paginationMain > Button:hover {
+    background: #A7D2CB;
+    color: black;
+    border: 2px solid black;
+}
+
+.paginationMain > Button:clicked {
+    background: black;
+}
+
+.paginationMain .selectPerPage {
+    margin-left: 1em;
+    background: #A7D2CB;
+    font-weight: bold;
+}
