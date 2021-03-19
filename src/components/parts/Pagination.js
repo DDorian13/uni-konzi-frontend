@@ -2,24 +2,21 @@ import React, {Component} from "react";
 import Button from "react-bootstrap/Button"
 
 class Pagination extends Component {
-    constructor() {
-        super();
-        this.state = {
-            currentPage: 1,
-            perPage: 10
-        }
+    constructor(props) {
+        super(props);
+        this.state = {}
     }
 
     handleClick = (plus) => {
         if (plus) {
-            this.setState(prevState => {
+            this.props.setFor.setState(prevState => {
                 return {
-                    currentPage: prevState.currentPage + 1
+                    currentPage: (Number)(prevState.currentPage) + 1
                 }
             })
         } else {
-            if (this.state.currentPage > 1) {
-                this.setState(prevState => {
+            if (this.props.setFor.state.currentPage > 1) {
+                this.props.setFor.setState(prevState => {
                     return {
                         currentPage: prevState.currentPage - 1
                     }
@@ -30,7 +27,10 @@ class Pagination extends Component {
 
     handleChange = (event) => {
         const {name, value} = event.target;
-        this.setState({ [name]: value });
+        this.props.setFor.setState({
+            [name]: value,
+            currentPage: 1
+        });
     }
 
     render() {
@@ -42,21 +42,20 @@ class Pagination extends Component {
                 >
                     &lt; Előző oldal
                 </Button>
-                <span
-                >
-                    Oldalanként:
-                    <select
-                        className="selectPerPage"
-                        onChange={this.handleChange}
-                        name="perPage"
-                        value={this.state.perPage}
-                    >
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                </span>
+                <span>
+                        Oldalanként:
+                        <select
+                            className="selectPerPage"
+                            onChange={this.handleChange}
+                            name="perPage"
+                            value={this.props.setFor.state.perPage}
+                        >
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </span>
                 <Button
                     variant="none"
                     onClick={() => this.handleClick(true)}

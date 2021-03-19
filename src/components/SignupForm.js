@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import GlobalValues from "../global/GlobalValues";
+import {Form, Button} from "react-bootstrap"
 
 class SignupForm extends Component {
     constructor() {
@@ -8,6 +9,7 @@ class SignupForm extends Component {
             name: "",
             email: "",
             password: "",
+            repassword: "",
             responseMsg: ""
         };
     }
@@ -19,12 +21,16 @@ class SignupForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        if (this.state.password !== this.state.repassword) {
+            this.setState({ responseMsg: "A jelszavak különböznek!"})
+            return;
+        }
         fetch(GlobalValues.serverURL + "/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(this.state)
         }).then(response => this.setState({
-            responseMsg: "Successfully signed up"
+            responseMsg: "Sikeres regisztráció"
         })).catch(error => this.setState({
             responseMsg: "Something went wrong"
         }))
@@ -32,37 +38,61 @@ class SignupForm extends Component {
 
     render() {
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Name"
-                        value={this.state.name}
-                        onChange={this.handleChange}
-                    />
-
-                    <input
+            <div className="signupFormContainer">
+                <Form onSubmit={this.handleSubmit} className="signupForm">
+                    <Form.Label className="signupWelcomeText">Regisztráció</Form.Label>
+                    <Form.Group>
+                        <Form.Label>Felhasználónév</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="name"
+                            placeholder="Name"
+                            value={this.state.name}
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Email</Form.Label>
+                    <Form.Control
                         type="email"
                         name="email"
                         placeholder="Email"
                         value={this.state.email}
                         onChange={this.handleChange}
                     />
-
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                    />
-
-                    <button>Sign up</button>
-                </form>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Jelszó</Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Jelszó újra</Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="repassword"
+                            placeholder="Password again"
+                            value={this.state.repassword}
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Button type="submit" variant="info">Regisztrálás</Button>
+                    { this.state.responseMsg !== "" &&
+                    <Form.Label
+                        className="loginFormError"
+                    >
+                        {this.state.responseMsg}
+                    </Form.Label> }
+                </Form>
                 <div>
                     <a href="/">Log in</a>
-                    <h2>{this.state.responseMsg}</h2>
+                    {//<h2>{this.state.responseMsg}</h2>
+                    }
                 </div>
             </div>
         );

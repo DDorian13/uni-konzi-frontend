@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import GlobalValues from "../global/GlobalValues";
+import {Form, Button} from "react-bootstrap";
 
 class LoginForm extends Component {
     constructor() {
@@ -39,7 +40,6 @@ class LoginForm extends Component {
                     logInMessage: "Successfully logged in"
                 })
                 localStorage.setItem(GlobalValues.tokenStorageName, tokenType + accessToken);
-                localStorage.setItem(GlobalValues.userName, this.state.username)
                 //window.location.href = "/universities";
             })
             .catch(error => this.setState({
@@ -49,30 +49,45 @@ class LoginForm extends Component {
     }
 
     render() {
+        const hiddenErrorMsg = this.state.logInMessage !== "";
         return(
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input
-                        type="text"
-                        name="username"
-                        value={this.state.username}
-                        placeholder="Username"
-                        onChange={this.handleChange}
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        placeholder="Password"
-                        onChange={this.handleChange}
-                    />
-                    <button>Log in</button>
-                </form>
+            <div className="loginFormContainer">
+                <Form onSubmit={this.handleSubmit} className="loginForm">
+                    <Form.Label className="loginWelcomeText">Üdvözöljük!</Form.Label>
+                    <Form.Group>
+                        <Form.Label>Felhasználónév</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="username"
+                            value={this.state.username}
+                            placeholder="Username"
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Jelszó</Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            value={this.state.password}
+                            placeholder="Password"
+                            onChange={this.handleChange}
+                        />
+                    </Form.Group>
+                    <Button variant="info" type="submit">Belépés</Button>
+                    { hiddenErrorMsg &&
+                    <Form.Label
+                        className="loginFormError"
+                    >
+                        {this.state.logInMessage}
+                    </Form.Label> }
+                </Form>
                 <div>
                     <a href="/universities">Universities</a>
                     <br/>
                     <a href="/signup">Sign up</a>
-                    <p>{this.state.isLoading ? "Loading..." : this.state.logInMessage}</p>
+                    {/*<p>{this.state.isLoading ? "Loading..." : this.state.logInMessage}</p>
+                    */}
                 </div>
             </div>
         );
