@@ -45,13 +45,14 @@ class Header extends Component {
                     <Nav className="mr-auto">
                         <Nav.Link href="#home">Home</Nav.Link>
                         <Nav.Link href="/universities">Egyetemek</Nav.Link>
-                        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+                        { this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
+                        <NavDropdown title="Admin" id="basic-nav-dropdown">
+                            <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
+                            <NavDropdown.Item href="/universities/newsubject">Tantárgy felvétele</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>
+                        </NavDropdown>}
                         <Form inline onSubmit={this.handleSubmit}>
                             <FormControl
                                 type="text"

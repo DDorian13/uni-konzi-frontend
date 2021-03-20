@@ -8,8 +8,8 @@ html > body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    object-fit: cover;
     margin: 0;
-    width: 100%;
 }
 
 .header {
@@ -22,7 +22,8 @@ html > body {
 
 .loginName > a {
     font-size: 14pt;
-    padding-left: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
     color: #444444;
 }
 
@@ -30,7 +31,7 @@ html > body {
     color: black;
 }
 
-.tableList, .uniNameInSubjects {
+.tableList, .uniNameInSubjects, .newUniForm, .newSubjectForm {
     margin: 3%;
 }
 
@@ -74,7 +75,7 @@ tbody {
     cursor: pointer;
 }
 
-.loginFormContainer, .signupFormContainer {
+.myFormContainer {
     width: 100%;
     height: 100%;
     display: flex;
@@ -83,7 +84,7 @@ tbody {
     align-items: center;
 }
 
-.loginForm, .signupForm {
+.myForm {
     width: 24em;
     display: flex;
     flex-flow: column;
@@ -93,21 +94,30 @@ tbody {
     background-color: #A7D2CB;
 }
 
-.loginForm > div, .signupForm > div {
+.newSubjectForm {
+    width: 28em;
+}
+
+.myForm > div {
     width: 100%;
 }
 
-.loginWelcomeText, .signupWelcomeText {
+.myFormWelcomeText{
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 2em;
 }
 
-.loginFormError, .signupFormError {
+.myFormErrorText {
     color: red;
     padding-top: 1em;
 }
 
-.loginForm button, .signupForm button {
+.myFormSuccessText {
+    color: green;
+    padding-top: 1em;
+}
+
+.myForm Button {
     margin-top: 1em;
 }

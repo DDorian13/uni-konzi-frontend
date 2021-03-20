@@ -21,26 +21,31 @@ class LoginForm extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         this.setState({ isLoading: true});
+
+        const body = {
+            username: this.state.username,
+            password: this.state.password
+        }
         await fetch(GlobalValues.serverURL + "/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(body)
         })
             .then(response => {
                 if (!response.ok)
-                    throw Error("Invalid credentials")
+                    throw Error("Sikertelen bejelentkezés")
                 return response.json()
             })
             .then(response => {
                 const {tokenType, accessToken} = response;
                 this.setState({
                     isLoading: false,
-                    logInMessage: "Successfully logged in"
+                    logInMessage: "Sikeres bejelentkezés"
                 })
                 localStorage.setItem(GlobalValues.tokenStorageName, tokenType + accessToken);
-                //window.location.href = "/universities";
+                window.location.href = "/universities";
             })
             .catch(error => this.setState({
                 isLoading: false,
@@ -49,11 +54,11 @@ class LoginForm extends Component {
     }
 
     render() {
-        const hiddenErrorMsg = this.state.logInMessage !== "";
+        const showResponseMsg = this.state.logInMessage !== "";
         return(
-            <div className="loginFormContainer">
-                <Form onSubmit={this.handleSubmit} className="loginForm">
-                    <Form.Label className="loginWelcomeText">Üdvözöljük!</Form.Label>
+            <div className="myFormContainer">
+                <Form onSubmit={this.handleSubmit} className="myForm">
+                    <Form.Label className="myFormWelcomeText">Üdvözöljük!</Form.Label>
                     <Form.Group>
                         <Form.Label>Felhasználónév</Form.Label>
                         <Form.Control
@@ -62,6 +67,7 @@ class LoginForm extends Component {
                             value={this.state.username}
                             placeholder="Username"
                             onChange={this.handleChange}
+                            required={true}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -72,23 +78,17 @@ class LoginForm extends Component {
                             value={this.state.password}
                             placeholder="Password"
                             onChange={this.handleChange}
+                            required={true}
                         />
                     </Form.Group>
                     <Button variant="info" type="submit">Belépés</Button>
-                    { hiddenErrorMsg &&
+                    { showResponseMsg &&
                     <Form.Label
-                        className="loginFormError"
+                        className={this.state.logInMessage === "Sikeres bejelentkezés" ? "mynFormSuccessText" : "myFormErrorText"}
                     >
                         {this.state.logInMessage}
                     </Form.Label> }
                 </Form>
-                <div>
-                    <a href="/universities">Universities</a>
-                    <br/>
-                    <a href="/signup">Sign up</a>
-                    {/*<p>{this.state.isLoading ? "Loading..." : this.state.logInMessage}</p>
-                    */}
-                </div>
             </div>
         );
     }

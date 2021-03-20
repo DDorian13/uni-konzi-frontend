@@ -25,22 +25,30 @@ class SignupForm extends Component {
             this.setState({ responseMsg: "A jelszavak különböznek!"})
             return;
         }
+
+        const body = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password
+        }
+
         fetch(GlobalValues.serverURL + "/users/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(body)
         }).then(response => this.setState({
             responseMsg: "Sikeres regisztráció"
         })).catch(error => this.setState({
-            responseMsg: "Something went wrong"
+            responseMsg: "Sikertelen regisztráció"
         }))
     }
 
     render() {
+
         return (
-            <div className="signupFormContainer">
-                <Form onSubmit={this.handleSubmit} className="signupForm">
-                    <Form.Label className="signupWelcomeText">Regisztráció</Form.Label>
+            <div className="myFormContainer">
+                <Form onSubmit={this.handleSubmit} className="myForm">
+                    <Form.Label className="myFormWelcomeText">Regisztráció</Form.Label>
                     <Form.Group>
                         <Form.Label>Felhasználónév</Form.Label>
                         <Form.Control
@@ -49,6 +57,7 @@ class SignupForm extends Component {
                             placeholder="Name"
                             value={this.state.name}
                             onChange={this.handleChange}
+                            required={true}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -59,6 +68,7 @@ class SignupForm extends Component {
                         placeholder="Email"
                         value={this.state.email}
                         onChange={this.handleChange}
+                        required={true}
                     />
                     </Form.Group>
                     <Form.Group>
@@ -69,6 +79,7 @@ class SignupForm extends Component {
                             placeholder="Password"
                             value={this.state.password}
                             onChange={this.handleChange}
+                            required={true}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -79,21 +90,21 @@ class SignupForm extends Component {
                             placeholder="Password again"
                             value={this.state.repassword}
                             onChange={this.handleChange}
+                            required={true}
                         />
                     </Form.Group>
                     <Button type="submit" variant="info">Regisztrálás</Button>
                     { this.state.responseMsg !== "" &&
                     <Form.Label
-                        className="loginFormError"
+                        className={this.state.responseMsg === "Sikeres regisztráció" ? "myFormSuccessText" : "myFormErrorText"}
                     >
                         {this.state.responseMsg}
                     </Form.Label> }
-                </Form>
-                <div>
-                    <a href="/">Log in</a>
-                    {//<h2>{this.state.responseMsg}</h2>
+                    {
+                        this.state.responseMsg === "Sikeres regisztráció" &&
+                        <Button href="/">Bejelentkezés</Button>
                     }
-                </div>
+                </Form>
             </div>
         );
     }
