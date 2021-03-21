@@ -74,7 +74,7 @@ class TableList extends Component {
             })
             .catch(error => {
                 console.log(error);
-                window.history.back();
+                window.history.go(-1);
                 //window.location.pathname = "/";
             });
     }
@@ -99,9 +99,20 @@ class TableList extends Component {
                 itemID={item.id}
                 onClick={function(event) {clickFunction(event.currentTarget)}}
             >
-                {this.props.valuesFrom.map(value =>
-                    <td>{item[value]}</td>
-                )}
+                {this.props.valuesFrom.map(value => {
+                    if (!Array.isArray(item[value])) {
+                        return (<td>{item[value]}</td>);
+                    } else {
+                        const items = item[value].map(listItem => <li>{listItem}</li>)
+                        return (
+                            <td>
+                                <ul>
+                                    {items}
+                                </ul>
+                            </td>
+                        );
+                    }
+                })}
             </tr>
         );
         return (

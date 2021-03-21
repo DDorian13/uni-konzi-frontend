@@ -25,8 +25,8 @@ class Header extends Component {
     };
 
     handleChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
+        const {name, value} = event.target;
+        this.setState({[name]: value});
     }
 
     handleSubmit = (event) => {
@@ -43,15 +43,15 @@ class Header extends Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
+                        <Nav.Link href="/">Kezdőlap</Nav.Link>
                         <Nav.Link href="/universities">Egyetemek</Nav.Link>
-                        { this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
+                        {this.state.token != null && this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
                         <NavDropdown title="Admin" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
                             <NavDropdown.Item href="/universities/newsubject">Tantárgy felvétele</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider/>
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                            <NavDropdown.Item href="/users">Felhasználók</NavDropdown.Item>
                         </NavDropdown>}
                         <Form inline onSubmit={this.handleSubmit}>
                             <FormControl
@@ -71,15 +71,15 @@ class Header extends Component {
                         </Form>
                     </Nav>
                 </Navbar.Collapse>
-                <Navbar.Text style={{color: "black", fontWeight: "bold"}}>
+                <Navbar.Text className="headerTitle">
                     Uni Konzi
                 </Navbar.Text>
                 {this.state.token === null ?
                     <div style={{display: "flex", flexFlow: "row", justifyContent: "flex-end"}}>
-                        <Button variant="outline-primary">
+                        <Button href="/login" variant="outline-info">
                             Bejelentkezés
                         </Button>
-                        <Button style={{marginLeft: "0.5em"}} variant="primary">
+                        <Button href="/signup" style={{marginLeft: "0.5em"}} variant="info">
                             Regisztrálás
                         </Button>
                     </div>
@@ -88,8 +88,8 @@ class Header extends Component {
                         className="loginName"
                         title={this.state.token.sub}
                     >
-                        <NavDropdown.Item onClick={this.handleLogout}>
-                            Kijelentkezés
+                        <NavDropdown.Item onClick={this.handleLogout} className="fa fa-sign-out">
+                            <span style={{fontFamily: "revert"}}> Kijelentkezés</span>
                         </NavDropdown.Item>
                     </NavDropdown>
                 }

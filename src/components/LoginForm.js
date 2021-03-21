@@ -84,7 +84,7 @@ class LoginForm extends Component {
                     <Button variant="info" type="submit">Belépés</Button>
                     { showResponseMsg &&
                     <Form.Label
-                        className={this.state.logInMessage === "Sikeres bejelentkezés" ? "mynFormSuccessText" : "myFormErrorText"}
+                        className={this.state.logInMessage === "Sikeres bejelentkezés" ? "myFormSuccessText" : "myFormErrorText"}
                     >
                         {this.state.logInMessage}
                     </Form.Label> }
