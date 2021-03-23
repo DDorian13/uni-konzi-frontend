@@ -10,7 +10,14 @@ class UniList extends Component {
 
     handleClick = (row) => {
         const id = row.getAttribute("itemID");
-        window.location.pathname = "/universities/" + id;
+        const url = new URL(window.location);
+        url.pathname = "/universities/" + id;
+        let keys = [];
+        url.searchParams.forEach((value, key) => {
+            keys.push(key)
+        })
+        keys.forEach(key => url.searchParams.delete(key));
+        window.location = url;
     }
 
     render() {

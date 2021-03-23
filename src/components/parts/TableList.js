@@ -75,7 +75,6 @@ class TableList extends Component {
             .catch(error => {
                 console.log(error);
                 window.history.go(-1);
-                //window.location.pathname = "/";
             });
     }
 
@@ -101,6 +100,9 @@ class TableList extends Component {
             >
                 {this.props.valuesFrom.map(value => {
                     if (!Array.isArray(item[value])) {
+                        if (item[value].hasOwnProperty("name")) {
+                            return (<td style={{fontWeight: "bold"}}>{item[value].name}</td>);
+                        }
                         return (<td>{item[value]}</td>);
                     } else {
                         const items = item[value].map(listItem => <li>{listItem}</li>)

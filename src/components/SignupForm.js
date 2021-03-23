@@ -102,7 +102,7 @@ class SignupForm extends Component {
                     </Form.Label> }
                     {
                         this.state.responseMsg === "Sikeres regisztráció" &&
-                        <Button href="/login">Bejelentkezés</Button>
+                        <Button variant="info" href="/login">Bejelentkezés</Button>
                     }
                 </Form>
             </div>

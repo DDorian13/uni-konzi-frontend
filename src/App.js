@@ -7,6 +7,9 @@ import NewUniversity from "./components/admin_only/NewUniversity";
 import NewSubject from "./components/admin_only/NewSubject";
 import Home from "./components/Home";
 import UsersList from "./components/admin_only/UsersList";
+import GlobalValues from "./global/GlobalValues";
+import decodeJWT from "jwt-decode";
+import SubjectComment from "./components/SubjectComment";
 
 class App extends Component {
     constructor() {
@@ -15,6 +18,15 @@ class App extends Component {
     }
 
     render() {
+        let token = localStorage.getItem(GlobalValues.tokenStorageName);
+        if (token !== null) {
+            token = decodeJWT(token);
+            if (token.exp * 1000 < Date.now()) {
+                localStorage.removeItem(GlobalValues.tokenStorageName);
+                window.location.pathname = "/";
+            }
+        }
+
         let item;
         const pathname = window.location.pathname
         if (pathname === "/") {
@@ -28,8 +40,10 @@ class App extends Component {
         } else if (pathname === "/universities/new") {
             item = <NewUniversity />;
         } else if (pathname === "/universities/newsubject") {
-            item = <NewSubject />;
-        } else if (pathname.search("^(/universities/([a-z]*[0-9]*)*)$") !== -1) {
+            item = <NewSubject/>;
+        } else if (pathname.search("^(/universities/([a-f]|[0-9]){24}/([a-f]|[0-9]){24})$") !== -1) {
+            item = <SubjectComment />;
+        } else if (pathname.search("^(/universities/([a-f]|[0-9]){24})$") !== -1) {
             item = <SubjectList />;
         } else if (pathname === "/users") {
             item = <UsersList />;

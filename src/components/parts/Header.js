@@ -49,7 +49,6 @@ class Header extends Component {
                         <NavDropdown title="Admin" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
                             <NavDropdown.Item href="/universities/newsubject">Tantárgy felvétele</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                             <NavDropdown.Divider/>
                             <NavDropdown.Item href="/users">Felhasználók</NavDropdown.Item>
                         </NavDropdown>}

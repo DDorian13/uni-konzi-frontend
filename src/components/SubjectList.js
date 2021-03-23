@@ -11,6 +11,20 @@ class SubjectList extends Component {
         }
     }
 
+    handleClick = (row) => {
+        const id = row.getAttribute("itemID");
+        const url = new URL(window.location);
+        url.pathname = window.location.pathname + `/${id}`;
+        let keys = [];
+        url.searchParams.forEach((value, key) => {
+            keys.push(key);
+        })
+        keys.forEach(key => {
+            url.searchParams.delete(key);
+        })
+        window.location = url;
+    }
+
     render() {
         const headers = ["Tárgykód", "Név"];
         const valuesFrom = ["code", "name"];
@@ -25,7 +39,7 @@ class SubjectList extends Component {
                     responseAttribute={responseAttribute}
                     isPageable={true}
                     forResponse={this}
-                    click={() => console.log("click")}
+                    click={this.handleClick}
                 />
             </div>
         );
