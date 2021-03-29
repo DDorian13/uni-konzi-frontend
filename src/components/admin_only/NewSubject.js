@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import Header from "../parts/Header";
 import {Form, Button} from "react-bootstrap";
 import GlobalValues from "../../global/GlobalValues";
 import decodeJWT from "jwt-decode";
@@ -16,8 +15,8 @@ class NewSubject extends Component {
         }
     }
 
-    async componentDidMount() {
-        await fetch(GlobalValues.serverURL + "/universities?page=1&limit=99999", {
+    componentDidMount() {
+        fetch(GlobalValues.serverURL + "/universities?page=1&limit=99999", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -44,14 +43,14 @@ class NewSubject extends Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmit = async (event) => {
+    handleSubmit = (event) => {
         event.preventDefault();
         const body = {
             name: this.state.name,
             code: this.state.code
         };
 
-        await fetch(GlobalValues.serverURL + "/universities/" + this.state.selectedUniversity, {
+        fetch(GlobalValues.serverURL + "/universities/" + this.state.selectedUniversity, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -66,7 +65,9 @@ class NewSubject extends Component {
             }
             return response.json();
         }).then(response => this.setState({
-            responseMsg: "A tantárgy felvétele sikerült"
+            responseMsg: "A tantárgy felvétele sikerült",
+            code: "",
+            name: ""
         })).catch(error => this.setState({
             responseMsg: error.message
         }));
@@ -88,8 +89,6 @@ class NewSubject extends Component {
         )
 
         return (
-            <>
-                <Header />
                 <div className="myFormContainer">
                     <Form className="myForm newSubjectForm" onSubmit={this.handleSubmit}>
                         <Form.Label className="myFormWelcomeText">Tantárgy felvétele</Form.Label>
@@ -138,7 +137,6 @@ class NewSubject extends Component {
                         }
                     </Form>
                 </div>
-            </>
         );
     }
 }

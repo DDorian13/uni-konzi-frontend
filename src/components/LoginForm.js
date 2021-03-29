@@ -18,7 +18,7 @@ class LoginForm extends Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmit = async (event) => {
+    handleSubmit = (event) => {
         event.preventDefault();
         this.setState({ isLoading: true});
 
@@ -26,7 +26,7 @@ class LoginForm extends Component {
             username: this.state.username,
             password: this.state.password
         }
-        await fetch(GlobalValues.serverURL + "/users/login", {
+        fetch(GlobalValues.serverURL + "/users/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

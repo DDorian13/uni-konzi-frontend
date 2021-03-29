@@ -1,5 +1,4 @@
 import React, {Component} from "react"
-import Header from "../parts/Header";
 import GlobalValues from "../../global/GlobalValues";
 import decodeJWT from "jwt-decode";
 import {Button, Form} from "react-bootstrap";
@@ -20,7 +19,7 @@ class NewUniversity extends Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmit = async (event) => {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         const body = {
@@ -29,7 +28,7 @@ class NewUniversity extends Component {
             city: this.state.city
         }
 
-        await fetch(GlobalValues.serverURL + "/universities",
+        fetch(GlobalValues.serverURL + "/universities",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)},
@@ -42,7 +41,10 @@ class NewUniversity extends Component {
                 }
                 return response.json();
             }).then(response => this.setState({
-                responseMsg: "Az egyetem felvétele sikerült"
+                responseMsg: "Az egyetem felvétele sikerült",
+                name: "",
+                country: "",
+                city: ""
             })).catch(error => this.setState({
                 responseMsg: error.message
             }));
@@ -60,8 +62,6 @@ class NewUniversity extends Component {
         }
 
         return (
-            <>
-                <Header />
                 <div className="myFormContainer">
                     <Form className="myForm" onSubmit={this.handleSubmit}>
                         <Form.Label className="myFormWelcomeText">Egyetem felvétele</Form.Label>
@@ -111,7 +111,6 @@ class NewUniversity extends Component {
                         }
                     </Form>
                 </div>
-            </>
         );
     }
 }

@@ -27,7 +27,7 @@ class TableList extends Component {
         return { _currentPage, _perPage}
     }
 
-    fetcher = async () => {
+    fetcher = () => {
         this.setState({
             isLoading: true
         });
@@ -40,7 +40,7 @@ class TableList extends Component {
             url.searchParams.set("nameLike", search);
         }
 
-        await fetch(url.toString(), {
+        fetch(url.toString(), {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

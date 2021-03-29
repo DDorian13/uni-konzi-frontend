@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Form, Button, Table} from "react-bootstrap";
-import Header from "./parts/Header";
 import TableList from "./parts/TableList";
 import GlobalValues from "../global/GlobalValues";
 
@@ -73,9 +72,18 @@ class SubjectComment extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        if (this.state.comment === "") {
+            return;
+        }
+
+        const button = document.getElementById("sendButton");
+        button.disable = true;
+
         const body = {
             text: this.state.comment
         }
+
+        this.setState({ comment: "" });
 
         fetch(GlobalValues.serverURL + window.location.pathname, {
             method: "POST",
@@ -97,12 +105,12 @@ class SubjectComment extends Component {
         }).catch(error => {
             console.log(error.message)
         })
+
+        button.disable = false;
     }
 
     render() {
         return (
-            <>
-                <Header />
                 <div className="commentContainer">
                     <div className="list_and_name"  style={{width: "70%"}}>
                         {this.state.isLoading ?
@@ -126,7 +134,7 @@ class SubjectComment extends Component {
                                 </tbody>
                             </Table>
                             </>}
-                        <Form style={{display: "flex", flexFlow: "row"}} onSubmit={this.handleSubmit}>
+                        <Form style={{display: "flex", flexFlow: "row", marginBottom: "1em"}} onSubmit={this.handleSubmit}>
                             <Form.Control
                                 as="textarea"
                                 rows={2}
@@ -135,8 +143,20 @@ class SubjectComment extends Component {
                                 placeholder="Hozzászólás..."
                                 onChange={this.handleChange}
                                 style={{resize: "none"}}
+                                onKeyPress={(event) => {
+                                    if (event.key === "Enter" && !event.shiftKey) {
+                                        document.getElementById("sendButton").click();
+                                    }
+                                }}
                             />
-                            <Button type="submit" variant="info" style={{width: "6em"}}>Küldés</Button>
+                            <Button
+                                id={"sendButton"}
+                                type="submit"
+                                variant="info"
+                                style={{width: "6em"}}
+                            >
+                                Küldés
+                            </Button>
                         </Form>
                     </div>
 
@@ -144,7 +164,6 @@ class SubjectComment extends Component {
                         <Button variant="info">Feliratkozás</Button>
                     </div>*/}
                 </div>
-            </>
         );
     }
 }

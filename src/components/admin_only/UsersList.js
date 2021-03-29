@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import TableList from "../parts/TableList";
-import Header from "../parts/Header";
 import {Button, Form} from "react-bootstrap";
 import GlobalValues from "../../global/GlobalValues";
 import decodeJWT from "jwt-decode";
@@ -36,13 +35,13 @@ class UsersList extends Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmitAdmin = async (event) => {
+    handleSubmitAdmin = (event) => {
         event.preventDefault();
         if (this.state.selectedUserId === "-1") {
             return;
         }
         document.getElementById("newAdmin").style.display = "none";
-        await fetch(GlobalValues.serverURL + "/users/" + this.state.selectedUserId, {
+        fetch(GlobalValues.serverURL + "/users/" + this.state.selectedUserId, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -103,7 +102,6 @@ class UsersList extends Component {
 
         return (
             <div>
-                <Header/>
                 <div className="newAdminButtons">
                     <Button
                         variant="info"

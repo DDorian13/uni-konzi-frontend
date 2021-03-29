@@ -10,6 +10,8 @@ import UsersList from "./components/admin_only/UsersList";
 import GlobalValues from "./global/GlobalValues";
 import decodeJWT from "jwt-decode";
 import SubjectComment from "./components/SubjectComment";
+import Header from "./components/parts/Header";
+import Chat from "./components/Chat";
 
 class App extends Component {
     constructor() {
@@ -47,10 +49,13 @@ class App extends Component {
             item = <SubjectList />;
         } else if (pathname === "/users") {
             item = <UsersList />;
+        } else if (pathname === "/chat") {
+            item = <Chat />;
         }
 
         return (
             <>
+                <Header />
                 <title>Uni Konzi</title>
                 {item}
             </>

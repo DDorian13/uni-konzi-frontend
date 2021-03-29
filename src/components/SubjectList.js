@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import TableList from "./parts/TableList";
-import Header from "./parts/Header";
-
 
 class SubjectList extends Component {
     constructor() {
@@ -31,7 +29,6 @@ class SubjectList extends Component {
         const responseAttribute = "subjects";
         return (
             <div>
-                <Header/>
                 <h2 className={"uniNameInSubjects"}>{this.state.response.name}</h2>
                 <TableList
                     headers={headers}

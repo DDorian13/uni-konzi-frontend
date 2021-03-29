@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import TableList from "./parts/TableList";
-import Header from "./parts/Header";
 
 class UniList extends Component {
     constructor() {
@@ -25,7 +24,6 @@ class UniList extends Component {
         const valuesFrom = ["name", "country", "city"];
         return (
             <div>
-                <Header/>
                 <TableList
                     headers={headers}
                     valuesFrom={valuesFrom}
