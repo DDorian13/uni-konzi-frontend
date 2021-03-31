@@ -93,8 +93,8 @@ class UsersList extends Component {
             }
         }
 
-        const headers = ["Név", "Email cím", "Jogosultságok"];
-        const valuesFrom = ["name", "email", "roles"];
+        const headers = ["Azonosító", "Név", "Email cím", "Jogosultságok"];
+        const valuesFrom = ["id", "name", "email", "roles"];
 
         const items = this.state.response.map(item =>
             <option value={item.id}>{item.name} - {item.email}</option>

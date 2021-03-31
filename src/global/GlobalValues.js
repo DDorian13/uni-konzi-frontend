@@ -1,6 +1,6 @@
 class GlobalValues {
     static tokenStorageName = "uni-konzi-token";
-    static serverURL = "http://localhost:8080/api";
+    static serverURL = "http://192.168.0.105:8080/api";
     static adminRole = "ROLE_ADMIN";
 }
 

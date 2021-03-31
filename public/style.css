@@ -8,6 +8,7 @@ html > body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    resize: none;
     margin: 0;
 }
 
@@ -167,4 +168,117 @@ tbody {
 
 .subjectName {
     margin-bottom: 1em;
+}
+
+.chat {
+    height: 90%;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat li {
+    list-style-type: none;
+}
+
+.allContacts {
+    background-color: #87B2AB;
+    padding: 1em;
+    border-radius: 20px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    max-height: 79vh;
+}
+
+.allContacts > ul {
+    padding: 0;
+}
+
+.contactList {
+    overflow-y: auto;
+}
+
+.contact {
+    border-radius: 10px;
+    border: 1px solid white;
+    background-color: #87B2AB;
+    padding: 0.1em 0.5em;
+    margin: 0.5em;
+    width: 12em;
+    font-size: 1.1em;
+    display: flex;
+    flex-flow: column;
+
+}
+
+.contact > p {
+    font-size: 0.8em;
+    padding: 0;
+    margin: 0;
+    align-self: flex-end;
+}
+
+.contact:hover {
+    cursor: pointer;
+}
+
+.active {
+    background-color: #A7D2CB;
+}
+
+.activeContact {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    background-color: #A7D2CB;
+    border-radius: 20px;
+    width: 50%;
+    padding: 1.5em 0 1.5em 0;
+    min-width: 20em;
+}
+
+.activeContactName {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.messageList {
+    max-height: 59vh;
+    min-height: 10em;
+    overflow-y: auto;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    background-color: #87B2AB;
+    border-radius: 10px;
+    border: 1px solid whitesmoke;
+    padding: 0 1em 0 1em;
+}
+
+.myMessage, .senderMessage {
+    margin: 0.2em 0 0.2em 0;
+    border-radius: 10px;
+    padding: 0.1em 0.5em 0.1em 0.5em;
+    max-width: 70%;
+}
+
+.myMessage {
+    color: white;
+    align-self: flex-end;
+    background-color: lightseagreen;
+}
+
+.senderMessage {
+    color: black;
+    align-self: flex-start;
+    background-color: whitesmoke;
+}
+
+.messageForm {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+
 }

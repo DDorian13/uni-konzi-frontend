@@ -45,6 +45,7 @@ class Header extends Component {
                     <Nav className="mr-auto">
                         <Nav.Link href="/">Kezdőlap</Nav.Link>
                         <Nav.Link href="/universities">Egyetemek</Nav.Link>
+                        <Nav.Link href="/chat">Üzenetek</Nav.Link>
                         {this.state.token != null && this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
                         <NavDropdown title="Admin" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
