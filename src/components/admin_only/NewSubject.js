@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Form, Button} from "react-bootstrap";
 import GlobalValues from "../../global/GlobalValues";
-import decodeJWT from "jwt-decode";
 
 class NewSubject extends Component {
     constructor() {
@@ -74,15 +73,7 @@ class NewSubject extends Component {
     }
 
     render() {
-        const jwtToken = localStorage.getItem(GlobalValues.tokenStorageName);
-        if (jwtToken != null) {
-            const decodedToken = decodeJWT(jwtToken);
-            if (decodedToken.roles.filter(role => role === GlobalValues.adminRole).length <= 0) {
-                alert("Nincs jogosultságod ehhez a művelethez");
-                window.history.go(-1);
-                return;
-            }
-        }
+        GlobalValues.hasAdminRole(true);
 
         const universities = this.state.universities.map(item =>
             <option value={item.id}>{item.name}</option>

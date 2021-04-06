@@ -8,12 +8,32 @@ class Header extends Component {
         super();
         let token = localStorage.getItem(GlobalValues.tokenStorageName);
         if (token != null) {
+            const before_decode = token;
             token = decodeJWT(token);
+            this.newMessage(before_decode, token);
         }
         this.state = {
             token: token,
-            searchString: ""
+            searchType: "universities",
+            searchString: "",
+            hasNewMessage: false
         }
+    }
+
+    newMessage(token, decoded_token) {
+        fetch(GlobalValues.serverURL + "/messages/" + decoded_token.userId + "/has-new", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            }
+        }).then(response => response.json())
+            .then(response => {
+                if (response >= 1) {
+                    this.setState({ hasNewMessage: true });
+                }
+            })
+            .catch(error => console.log(error));
     }
 
     handleLogout = (event) => {
@@ -32,7 +52,7 @@ class Header extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const url = new URL(window.location.origin);
-        url.pathname = "/universities/search";
+        url.pathname = `/${this.state.searchType}/search`;
         url.searchParams.set("nameLike", this.state.searchString);
         window.location = url;
     }
@@ -45,7 +65,14 @@ class Header extends Component {
                     <Nav className="mr-auto">
                         <Nav.Link href="/">Kezdőlap</Nav.Link>
                         <Nav.Link href="/universities">Egyetemek</Nav.Link>
-                        <Nav.Link href="/chat">Üzenetek</Nav.Link>
+                        <Nav.Link href="/chat">
+                            Üzenetek
+                            {this.state.hasNewMessage && <strong style={{fontSize: "0.9em"}}> -új üzenet-</strong>}
+                        </Nav.Link>
+                        <NavDropdown id="basic-nav-dropdown-subscriptions" title="Konzultációk">
+                            <NavDropdown.Item href="/subjects/tutor-of">Tartok...</NavDropdown.Item>
+                            <NavDropdown.Item href="/subjects/pupil-of">Kértem...</NavDropdown.Item>
+                        </NavDropdown>
                         {this.state.token != null && this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
                         <NavDropdown title="Admin" id="basic-nav-dropdown">
                             <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
@@ -55,8 +82,18 @@ class Header extends Component {
                         </NavDropdown>}
                         <Form inline onSubmit={this.handleSubmit}>
                             <FormControl
+                                as="select"
+                                name="searchType"
+                                value={this.state.searchType}
+                                className="mr-sm-2"
+                                onChange={this.handleChange}
+                            >
+                                <option value="universities">Egyetem</option>
+                                <option value="subjects">Tantárgy</option>
+                            </FormControl>
+                            <FormControl
                                 type="text"
-                                placeholder="Egyetem keresése"
+                                placeholder="keresése"
                                 className="mr-sm-2"
                                 name="searchString"
                                 value={this.state.searchString}

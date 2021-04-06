@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import LoginForm from "./components/LoginForm";
+import LoginForm from "./components/authentication/LoginForm";
 import UniList from "./components/UniList";
-import SignupForm from "./components/SignupForm";
+import SignupForm from "./components/authentication/SignupForm";
 import SubjectList from "./components/SubjectList";
 import NewUniversity from "./components/admin_only/NewUniversity";
 import NewSubject from "./components/admin_only/NewSubject";
@@ -12,6 +12,9 @@ import decodeJWT from "jwt-decode";
 import SubjectComment from "./components/SubjectComment";
 import Header from "./components/parts/Header";
 import Chat from "./components/Chat";
+import TutorOf from "./components/konzi/TutorOf";
+import PupilOf from "./components/konzi/PupilOf";
+import PupilsOfSubject from "./components/konzi/PupilsOfSubject";
 
 class App extends Component {
     constructor() {
@@ -43,14 +46,22 @@ class App extends Component {
             item = <NewUniversity />;
         } else if (pathname === "/universities/newsubject") {
             item = <NewSubject/>;
-        } else if (pathname.search("^(/universities/([a-f]|[0-9]){24}/([a-f]|[0-9]){24})$") !== -1) {
-            item = <SubjectComment />;
         } else if (pathname.search("^(/universities/([a-f]|[0-9]){24})$") !== -1) {
             item = <SubjectList />;
         } else if (pathname === "/users") {
             item = <UsersList />;
         } else if (pathname === "/chat") {
             item = <Chat />;
+        } else if (pathname === "/subjects/tutor-of") {
+            item = <TutorOf />;
+        } else if (pathname === "/subjects/pupil-of") {
+            item = <PupilOf />;
+        } else if (pathname.search("^(/subjects/([a-f]|[0-9]){24})/pupils$") !== -1) {
+            item = <PupilsOfSubject />
+        } else if (pathname === "/subjects/search") {
+            item = <SubjectList search={true} />
+        } else if (pathname.search("^/subjects/([a-f]|[0-9]){24}") !== -1) {
+            item = <SubjectComment />;
         }
 
         return (

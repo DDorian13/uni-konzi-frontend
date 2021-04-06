@@ -59,7 +59,7 @@ class TableList extends Component {
             .then(response => {
                 const { _currentPage, _perPage } = this.getSearchQueries();
                 let _response = response;
-                if (this.props.responseAttribute !== "") {
+                if (this.props.hasOwnProperty("responseAttribute") && this.props.responseAttribute !== "") {
                     _response = response[this.props.responseAttribute];
                 }
                 if (this.props.hasOwnProperty("forResponse")) {
@@ -74,7 +74,9 @@ class TableList extends Component {
             })
             .catch(error => {
                 console.log(error);
-                window.history.go(-1);
+                const url = new URL(window.location);
+                url.pathname = "/";
+                window.location = url.href;
             });
     }
 
@@ -85,8 +87,8 @@ class TableList extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.currentPage !== this.state.currentPage || prevState.perPage !== this.state.perPage) {
             const url = new URL(window.location);
-            url.searchParams.set("page", this.state.currentPage)
-            url.searchParams.set("limit", this.state.perPage)
+            url.searchParams.set("page", this.state.currentPage);
+            url.searchParams.set("limit", this.state.perPage);
             window.location = url.href;
         }
     }

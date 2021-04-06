@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Form, Button, Table} from "react-bootstrap";
+import {Form, Button, Table, Alert} from "react-bootstrap";
 import TableList from "./parts/TableList";
 import GlobalValues from "../global/GlobalValues";
 
@@ -12,7 +12,8 @@ class SubjectComment extends Component {
             isLoading: true,
             currentPage: _currentPage,
             perPage: _perPage,
-            comment: ""
+            comment: "",
+            subscriptionSuccess: ""
         };
     }
 
@@ -23,7 +24,7 @@ class SubjectComment extends Component {
             isLoading: true
         });
 
-        const url = new URL(GlobalValues.serverURL + window.location.pathname);
+        const url = new URL(GlobalValues.serverURL + window.location.pathname + "/comments");
         url.searchParams.set("page", this.state.currentPage);
         url.searchParams.set("limit", this.state.perPage);
 
@@ -51,7 +52,9 @@ class SubjectComment extends Component {
             })
             .catch(error => {
                 console.log(error);
-                window.history.go(-1);
+                const url = new URL(window.location);
+                url.pathname = "/";
+                window.location = url.href;
             });
     }
 
@@ -85,7 +88,7 @@ class SubjectComment extends Component {
 
         this.setState({ comment: "" });
 
-        fetch(GlobalValues.serverURL + window.location.pathname, {
+        fetch(GlobalValues.serverURL + window.location.pathname + "/comments", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -100,26 +103,50 @@ class SubjectComment extends Component {
         }).then(response => {
             let newCommentList = this.state.response;
             newCommentList.comments.push(response);
-            console.log(newCommentList);
             this.setState({ response: newCommentList, comment: "" });
         }).catch(error => {
-            console.log(error.message)
+            console.log(error)
         })
 
         button.disable = false;
     }
 
+    handleSubscribe = (event) => {
+        let role = "tutors";
+        if (event.target.id === "needHelp") {
+            role = "pupils";
+        }
+
+        const timer = setInterval(() => this.setState({ subscriptionSuccess: "" },
+            () => clearInterval(timer)), 5000);
+
+        fetch(GlobalValues.serverURL + window.location.pathname + `/${role}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)
+            }
+        }).then(response => response.json())
+            .then(response => {
+                console.log(response);
+                this.setState({ subscriptionSuccess: "Sikeres művelet!"}, () => timer);
+            })
+            .catch(error =>  {
+                console.log(error)
+                this.setState({ subscriptionSuccess: "Sikertelen művelet!"}, () => timer);
+            });
+    }
+
     render() {
         return (
                 <div className="commentContainer">
-                    <div className="list_and_name"  style={{width: "70%"}}>
+                    <div className="commentList">
+                        <h2 className="subjectName">{this.state.response.name}</h2>
                         {this.state.isLoading ?
                             "Loading..."
                             :
-                            <>
-                            <h1 className="subjectName">{this.state.response.name}</h1>
                             <Table striped bordered hover>
-                                <tbody style={{cursor: "text"}}>
+                                <tbody style={{cursor: "text", overflowY: "auto", maxHeight: "70%"}}>
                                     {this.state.response.comments.map(comment => {
                                         return (
                                             <tr>
@@ -133,7 +160,7 @@ class SubjectComment extends Component {
                                     })}
                                 </tbody>
                             </Table>
-                            </>}
+                        }
                         <Form style={{display: "flex", flexFlow: "row", marginBottom: "1em"}} onSubmit={this.handleSubmit}>
                             <Form.Control
                                 as="textarea"
@@ -145,6 +172,7 @@ class SubjectComment extends Component {
                                 style={{resize: "none"}}
                                 onKeyPress={(event) => {
                                     if (event.key === "Enter" && !event.shiftKey) {
+                                        event.preventDefault();
                                         document.getElementById("sendButton").click();
                                     }
                                 }}
@@ -159,10 +187,13 @@ class SubjectComment extends Component {
                             </Button>
                         </Form>
                     </div>
-
-                    {/*<div className="subjectButtons">
-                        <Button variant="info">Feliratkozás</Button>
-                    </div>*/}
+                    <div className="subscribeButtons">
+                        <Button id="canHelp" variant="info" onClick={this.handleSubscribe}>Konzultációt tudok tartani</Button>
+                        <Button id="needHelp" variant="info" onClick={this.handleSubscribe}>Konzultációt kérek</Button>
+                        {this.state.subscriptionSuccess && <Alert variant={this.state.subscriptionSuccess === "Sikeres művelet!" ? "success" : "danger"}>
+                            {this.state.subscriptionSuccess}
+                        </Alert>}
+                    </div>
                 </div>
         );
     }

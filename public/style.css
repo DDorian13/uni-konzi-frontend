@@ -40,7 +40,7 @@ html > body {
     color: black;
 }
 
-.tableList, .uniNameInSubjects, .commentContainer {
+.tableList, .uniNameInSubjects, .commentContainer, .pupilsOfHead {
     margin: 3% 3% 0 3%;
 }
 
@@ -50,14 +50,15 @@ html > body {
     justify-content: space-between;
 }
 
-.newAdminButtons {
+.topRowContainer {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
+    align-items: center;
     margin: 3% 3% 0 3%;
 }
 
-#newAdmin, #deleteUser {
+#newAdmin, #deleteUser, #overlayForm {
     position: fixed;
     display: none;
     flex-flow: column;
@@ -218,6 +219,7 @@ tbody {
     padding: 0;
     margin: 0;
     align-self: flex-end;
+    font-weight: bold;
 }
 
 .contact:hover {
@@ -226,6 +228,7 @@ tbody {
 
 .active {
     background-color: #A7D2CB;
+    font-style: italic;
 }
 
 .activeContact {
@@ -279,6 +282,42 @@ tbody {
 .messageForm {
     display: flex;
     flex-flow: row;
-    justify-content: space-around;
+    justify-content: center;
+    width: 100%;
+}
 
+.chatInput {
+    max-width: 50%;
+}
+
+.commentList {
+    width: 70%;
+}
+
+.commentTableAndButtons {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.subscribeButtons {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+}
+
+.subscribeButtons > button {
+    margin-bottom: 1em;
+}
+
+.pupilsOfHead {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.formCloseButton {
+    margin: 0;
+    align-self: flex-end;
 }

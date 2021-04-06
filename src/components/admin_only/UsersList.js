@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import TableList from "../parts/TableList";
 import {Button, Form} from "react-bootstrap";
 import GlobalValues from "../../global/GlobalValues";
-import decodeJWT from "jwt-decode";
 
 class UsersList extends Component {
     constructor() {
@@ -27,7 +26,7 @@ class UsersList extends Component {
             return response.json();
         }).then(response => {
             this.setState({response: response});
-        }).catch(error => console.log(error.message));
+        }).catch(error => console.log(error));
     }
 
     handleChange = (event) => {
@@ -53,7 +52,7 @@ class UsersList extends Component {
             }
             console.log("Jogosultság hozzáadva!");
             window.location.pathname = "/users";
-        }).catch(error => console.log(error.message));
+        }).catch(error => console.log(error));
 
         this.setState({ selectedUserId: "-1" });
     }
@@ -77,21 +76,13 @@ class UsersList extends Component {
             }
             console.log("Felhasználó törölve!");
             window.location.pathname = "/users";
-        }).catch(error => console.log(error.message));
+        }).catch(error => console.log(error));
 
         this.setState({ selectedUserId: "-1"})
     }
 
     render() {
-        const jwtToken = localStorage.getItem(GlobalValues.tokenStorageName);
-        if (jwtToken != null) {
-            const decodedToken = decodeJWT(jwtToken);
-            if (decodedToken.roles.filter(role => role === GlobalValues.adminRole).length <= 0) {
-                alert("Nincs jogosultságod ehhez a művelethez");
-                window.history.go(-1);
-                return;
-            }
-        }
+        GlobalValues.hasAdminRole(true);
 
         const headers = ["Azonosító", "Név", "Email cím", "Jogosultságok"];
         const valuesFrom = ["id", "name", "email", "roles"];
@@ -102,7 +93,7 @@ class UsersList extends Component {
 
         return (
             <div>
-                <div className="newAdminButtons">
+                <div className="topRowContainer">
                     <Button
                         variant="info"
                         onClick={() => document.getElementById("newAdmin").style.display = "flex"}
@@ -120,10 +111,9 @@ class UsersList extends Component {
                 <div id="newAdmin">
                     <Form className="myForm" onSubmit={this.handleSubmitAdmin}>
                         <Button
-                            style={{margin: 0, alignSelf: "flex-end"}}
                             variant="outline-danger"
                             onClick={() => document.getElementById("newAdmin").style.display = "none"}
-                            className="fa fa-close"
+                            className="fa fa-close formCloseButton"
                         />
                         <Form.Group>
                             <Form.Label>Új admin</Form.Label>
@@ -144,10 +134,9 @@ class UsersList extends Component {
                 <div id="deleteUser">
                     <Form className="myForm" onSubmit={this.handleSubmitDelete}>
                         <Button
-                            style={{margin: 0, alignSelf: "flex-end"}}
                             variant="outline-danger"
                             onClick={() => document.getElementById("deleteUser").style.display = "none"}
-                            className="fa fa-close"
+                            className="fa fa-close formCloseButton"
                         />
                         <Form.Group>
                             <Form.Label>Törlendő felhasználó</Form.Label>

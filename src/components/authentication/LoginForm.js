@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import GlobalValues from "../global/GlobalValues";
+import GlobalValues from "../../global/GlobalValues";
 import {Form, Button} from "react-bootstrap";
 
 class LoginForm extends Component {

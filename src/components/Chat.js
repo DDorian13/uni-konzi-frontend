@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Form, Button} from "react-bootstrap";
+import {Form, Button, Popover, OverlayTrigger} from "react-bootstrap";
 import GlobalValues from "../global/GlobalValues";
 import decodeJWT from "jwt-decode";
 
@@ -15,11 +15,19 @@ class Chat extends Component {
             activeContact: undefined,
             messages: []
         }
+        this.timezone = new Date().getTimezoneOffset() / -60;
     }
 
     componentDidMount() {
         this.connect();
-        const token = decodeJWT(localStorage.getItem(GlobalValues.tokenStorageName));
+        const localToken = localStorage.getItem(GlobalValues.tokenStorageName);
+        if (localToken === null) {
+            alert("A továbblépéshez jelentkezz be!");
+            const url = new URL(window.location);
+            url.pathname = "/";
+            window.location = url.href;
+        }
+        const token = decodeJWT(localToken);
         currentUser = {
             name: token.sub,
             id: token.userId
@@ -96,14 +104,17 @@ class Chat extends Component {
     }
 
     loadContacts = () => {
-        const promise = fetch(GlobalValues.serverURL + `/users`, {
+        const promise = fetch(GlobalValues.serverURL + `/messages/${currentUser.id}/contacts`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)
             }
         }).then(response => {
-            if (!response.ok) {
+            if (response.status === 401) {
+                alert("A továbblépéshez jelentkezz be!");
+                throw Error("Unauthorized");
+            } else if (!response.ok) {
                 throw Error("Hiba");
             }
             return response.json();
@@ -116,13 +127,22 @@ class Chat extends Component {
                         return user;
                     })
             )
-        ).catch(error => console.log(error.message));
+        ).catch(error => {
+            console.log(error);
+            window.location.pathname = "/";
+        });
 
         promise.then(promises =>
             Promise.all(promises).then(users => {
                 this.setState({ contacts: users });
                 if (this.state.activeContact === undefined && users.length > 0) {
-                    this.setState({ activeContact: users[0]})
+                    const searchParams = new URLSearchParams(window.location.search);
+                    if (searchParams.has("current")) {
+                        const user = users.find(user => user.id === searchParams.get("current"));
+                        this.setState({activeContact: user});
+                    } else {
+                        this.setState({activeContact: users[0]});
+                    }
                 }
             })
         );
@@ -173,6 +193,10 @@ class Chat extends Component {
         element.scrollTop = element.scrollHeight;
     }
 
+    makeReadableDate = (date) => {
+        return new Date(date).toLocaleString();
+    }
+
     render() {
         return (
             <div className="chat">
@@ -181,16 +205,24 @@ class Chat extends Component {
                     <ul className="contactList">
                         {this.state.contacts.map(contact =>
                             <li
-                                onClick={() => this.setState({
-                                    activeContact: contact
-                                })}
+                                onClick={() => {
+                                    this.setState({
+                                        activeContact: contact
+                                    }, () => {
+                                        if (window.history.pushState) {
+                                            let newUrl = window.location.protocol + "//" + window.location.host
+                                                + window.location.pathname +`?current=${contact.id}`;
+                                            window.history.pushState({path:newUrl},'',newUrl);
+                                        }
+                                    })
+                                }}
                                 className={this.state.activeContact !== undefined && contact.id === this.state.activeContact.id ?
                                     "contact active"
                                     :
                                     "contact"
                                 }
                             >
-                                {contact.name}{contact.newMessagesCount > 0 && <p>Új üzenet</p>}
+                                {contact.name}{contact.newMessagesCount > 0 && <p>{contact.newMessagesCount} új üzenet</p>}
                             </li>
                         )}
                     </ul>
@@ -198,11 +230,20 @@ class Chat extends Component {
                 <div className="activeContact">
                     <p className="activeContactName">{this.state.activeContact !== undefined && this.state.activeContact.name}</p>
                     <ul className="messageList" id="messageList">
-                        {this.state.messages !== [] && this.state.messages.map(msg =>
-                            <li className={msg.senderId === currentUser.id ? "myMessage":"senderMessage"}>
-                                {msg.message}
-                            </li>
-                        )}
+                        {this.state.messages !== [] && this.state.messages.map(msg => {
+                            const popover = (
+                                <Popover id="popover-basic">
+                                    <Popover.Content>{this.makeReadableDate(msg.timestamp)}</Popover.Content>
+                                </Popover>
+                            );
+                            return (
+                                <OverlayTrigger trigger={["hover", "focus"]} placement="top" overlay={popover}>
+                                    <li className={msg.senderId === currentUser.id ? "myMessage" : "senderMessage"}>
+                                        {msg.message}
+                                    </li>
+                                </OverlayTrigger>
+                            );
+                        })}
                     </ul>
                     <Form onSubmit={this.handleSubmit} className="messageForm">
                         <Form.Control
@@ -210,6 +251,7 @@ class Chat extends Component {
                             name="message"
                             value={this.state.message}
                             onChange={this.handleChange}
+                            className="chatInput"
                         />
                         <Button variant="info" type="submit">Küldés</Button>
                     </Form>

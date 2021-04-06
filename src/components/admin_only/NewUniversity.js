@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import GlobalValues from "../../global/GlobalValues";
-import decodeJWT from "jwt-decode";
 import {Button, Form} from "react-bootstrap";
 
 class NewUniversity extends Component {
@@ -51,15 +50,7 @@ class NewUniversity extends Component {
     }
 
     render() {
-        const jwtToken = localStorage.getItem(GlobalValues.tokenStorageName);
-        if (jwtToken != null) {
-            const decodedToken = decodeJWT(jwtToken);
-            if (decodedToken.roles.filter(role => role === GlobalValues.adminRole).length <= 0) {
-                alert("Nincs jogosultságod ehhez a művelethez");
-                window.history.go(-1);
-                return;
-            }
-        }
+        GlobalValues.hasAdminRole(true);
 
         return (
                 <div className="myFormContainer">
