@@ -34,7 +34,7 @@ class SubjectList extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
         if (this.state.selectedSubjectId === "-1") {
-            //return;
+            return;
         }
         let success = true;
 

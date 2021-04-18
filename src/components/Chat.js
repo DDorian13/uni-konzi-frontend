@@ -12,10 +12,11 @@ class Chat extends Component {
         this.state = {
             message: "",
             contacts: [],
+            appointments: [],
             activeContact: undefined,
-            messages: []
+            messages: [],
+            selectedAppointmentIndex: "-1"
         }
-        this.timezone = new Date().getTimezoneOffset() / -60;
     }
 
     componentDidMount() {
@@ -30,7 +31,8 @@ class Chat extends Component {
         const token = decodeJWT(localToken);
         currentUser = {
             name: token.sub,
-            id: token.userId
+            id: token.userId,
+            email: token.email
         };
         this.loadContacts();
     }
@@ -49,6 +51,7 @@ class Chat extends Component {
                 .then(messages => this.setState({ messages: messages }, () => this.scrollToBottom()))
                 .catch(error => console.log(error));
             this.loadContacts();
+            this.getAppointments();
         }
     }
 
@@ -197,6 +200,56 @@ class Chat extends Component {
         return new Date(date).toLocaleString();
     }
 
+    getAppointments = () => {
+        if (this.state.activeContact === undefined || currentUser === null) {
+            return;
+        }
+
+        fetch(GlobalValues.serverURL + `/appointments/${this.state.activeContact.id}/${currentUser.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)
+            }
+        })
+            .then(response => response.json())
+            .then(appointments => this.setState({ appointments: appointments }))
+            .catch(error => console.log(error));
+    }
+
+    downloadForCalendar = (event) => {
+        event.preventDefault();
+        if (this.state.selectedAppointmentIndex === "-1") {
+            return;
+        }
+        const ics = require("ics");
+        const appointment = this.state.appointments[this.state.selectedAppointmentIndex];
+        const date = new Date(appointment.date);
+        ics.createEvent({
+            title: "Uni Konzi Konzultáció",
+            status: "CONFIRMED",
+            busyStatus: "BUSY",
+            description: appointment.description,
+            location: appointment.location,
+            start: [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), 0],
+            duration: { minutes: appointment.length},
+            attendees: [
+                { name: currentUser.name, email: currentUser.email, role: 'REQ-PARTICIPANT'},
+                { name: this.state.activeContact.name, email: this.state.activeContact.email, role: 'REQ-PARTICIPANT'}
+            ]
+        }, (error, value) => {
+            if (error) {
+                console.log(error);
+            }
+
+            let arrayOfValues = value.split("\n");
+
+            let FileSaver = require("file-saver");
+            const blob = new Blob([value], {type: "text/plain;charset=utf-8"});
+            FileSaver.saveAs(blob, "uni-konzi.ics");
+        })
+    }
+
     render() {
         return (
             <div className="chat">
@@ -229,6 +282,27 @@ class Chat extends Component {
                 </div>
                 <div className="activeContact">
                     <p className="activeContactName">{this.state.activeContact !== undefined && this.state.activeContact.name}</p>
+
+                    <div className="dateBar">
+                        <Button variant="outline-info" className="fa fa-refresh dateRefreshButton" onClick={this.getAppointments}/>
+                        <Form className="selectDateForm" onSubmit={this.downloadForCalendar}>
+                            <Form.Control
+                                as="select"
+                                name="selectedAppointmentIndex"
+                                value={this.state.selectedAppointmentIndex}
+                                onChange={this.handleChange}
+                            >
+                                <option value="-1">Válassz egy megbeszélt időpontot a letöltéshez...</option>
+                                {this.state.appointments && this.state.appointments.map(appointment =>
+                                    <option value={this.state.appointments.indexOf(appointment)}>
+                                        {new Date(appointment.date).toLocaleString()}
+                                    </option>
+                                )}
+                            </Form.Control>
+                            <Button variant="info" type="submit" >Letöltés</Button>
+                        </Form>
+                    </div>
+
                     <ul className="messageList" id="messageList">
                         {this.state.messages !== [] && this.state.messages.map(msg => {
                             const popover = (

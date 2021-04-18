@@ -58,7 +58,7 @@ html > body {
     margin: 3% 3% 0 3%;
 }
 
-#newAdmin, #deleteUser, #overlayForm {
+#newAdmin, #deleteUser, #overlayForm, #overlayDateReserve {
     position: fixed;
     display: none;
     flex-flow: column;
@@ -320,4 +320,23 @@ tbody {
 .formCloseButton {
     margin: 0;
     align-self: flex-end;
+}
+
+.dateBar, .selectDateForm {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.dateBar {
+    margin: 0 0.5em 1em 0.5em;
+}
+
+.dateRefreshButton {
+    margin-right: 0.5em;
+}
+
+.react-date-picker {
+    background-color: whitesmoke;
 }
