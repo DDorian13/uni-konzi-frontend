@@ -3,38 +3,13 @@ import {Form, Button} from "react-bootstrap";
 import GlobalValues from "../../global/GlobalValues";
 
 class NewSubject extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            universities: [],
             responseMsg: "",
             code: "",
-            name: "",
-            selectedUniversity: {}
+            name: ""
         }
-    }
-
-    componentDidMount() {
-        fetch(GlobalValues.serverURL + "/universities?page=1&limit=99999", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)
-            }
-        }).then(response => {
-            if (!response.ok)
-            {
-                throw Error("Hiba az egyetemek lekérdezése közben");
-            }
-            return response.json();
-        }).then(response => {
-            this.setState({
-                universities: response,
-                selectedUniversity: response[0].id
-            })
-        }).catch(error => this.setState({
-            responseMsg: error.message
-        }));
     }
 
     handleChange = (event) => {
@@ -49,7 +24,7 @@ class NewSubject extends Component {
             code: this.state.code
         };
 
-        fetch(GlobalValues.serverURL + "/universities/" + this.state.selectedUniversity, {
+        fetch(GlobalValues.serverURL + "/universities/" + this.props.universityId, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -63,38 +38,33 @@ class NewSubject extends Component {
                 throw Error("Hiba");
             }
             return response.json();
-        }).then(response => this.setState({
-            responseMsg: "A tantárgy felvétele sikerült",
-            code: "",
-            name: ""
-        })).catch(error => this.setState({
-            responseMsg: error.message
-        }));
+        }).then(response =>
+            this.setState({
+                code: "",
+                name: ""
+            }, () => {
+                alert("A tantárgy felvétele sikerült")
+                window.location.reload();
+            })
+        ).catch(error => {
+            console.log(error);
+            alert(error.message)
+        });
     }
 
     render() {
         GlobalValues.hasAdminRole(true);
 
-        const universities = this.state.universities.map(item =>
-            <option value={item.id}>{item.name}</option>
-        )
-
         return (
-                <div className="myFormContainer">
+                <div id="overlayOfNew" className="myFormContainer">
                     <Form className="myForm newSubjectForm" onSubmit={this.handleSubmit}>
+                        <Button
+                            variant="outline-danger"
+                            onClick={() => document.getElementById("overlayOfNew").style.display="none"}
+                            className="fa fa-close formCloseButton"
+                        />
                         <Form.Label className="myFormWelcomeText">Tantárgy felvétele</Form.Label>
-                        <Form.Group>
-                            <Form.Label>Egyetem kiválasztása</Form.Label>
-                            <Form.Control
-                                as="select"
-                                value={this.state.selectedUniversity}
-                                name="selectedUniversity"
-                                onChange={this.handleChange}
-                                required={true}
-                            >
-                                {universities}
-                            </Form.Control>
-                        </Form.Group>
+
                         <Form.Group>
                             <Form.Label>Tárgykód</Form.Label>
                             <Form.Control

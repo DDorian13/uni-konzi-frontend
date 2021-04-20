@@ -58,7 +58,7 @@ html > body {
     margin: 3% 3% 0 3%;
 }
 
-#newAdmin, #deleteUser, #overlayForm, #overlayDateReserve {
+#overlayOfNew, #overlayOfDelete, #overlayForm, #overlayDateReserve {
     position: fixed;
     display: none;
     flex-flow: column;
@@ -292,6 +292,18 @@ tbody {
 
 .commentList {
     width: 70%;
+}
+
+.commentTableBody {
+    display: block;
+    cursor: text;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.commentTableBody tr {
+    display: table;
+    width: 100%;
 }
 
 .commentTableAndButtons {

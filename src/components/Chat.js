@@ -242,8 +242,6 @@ class Chat extends Component {
                 console.log(error);
             }
 
-            let arrayOfValues = value.split("\n");
-
             let FileSaver = require("file-saver");
             const blob = new Blob([value], {type: "text/plain;charset=utf-8"});
             FileSaver.saveAs(blob, "uni-konzi.ics");
@@ -326,6 +324,7 @@ class Chat extends Component {
                             value={this.state.message}
                             onChange={this.handleChange}
                             className="chatInput"
+                            placeholder="Új üzenet..."
                         />
                         <Button variant="info" type="submit">Küldés</Button>
                     </Form>

@@ -22,7 +22,7 @@ class SignupForm extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.password !== this.state.repassword) {
-            this.setState({ responseMsg: "A jelszavak különböznek!"})
+            this.setState({ responseMsg: "A jelszavak nem egyeznek meg!"})
             return;
         }
 
@@ -36,11 +36,22 @@ class SignupForm extends Component {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
-        }).then(response => this.setState({
-            responseMsg: "Sikeres regisztráció"
-        })).catch(error => this.setState({
-            responseMsg: "Sikertelen regisztráció"
-        }))
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            let responseMessage;
+            if (response.hasOwnProperty("error")) {
+                responseMessage = response.error.match("email") ? "Ezzel az email címmel már regisztráltak" : "Ez a felhasználónév foglalt";
+            } else {
+                responseMessage = "Sikeres regisztráció"
+            }
+            this.setState({responseMsg: responseMessage});
+        }).catch(error => {
+            console.log(error);
+            this.setState({
+                responseMsg: "Sikertelen regisztráció"
+            })
+        })
     }
 
     render() {
@@ -54,7 +65,6 @@ class SignupForm extends Component {
                         <Form.Control
                             type="text"
                             name="name"
-                            placeholder="Name"
                             value={this.state.name}
                             onChange={this.handleChange}
                             required={true}
@@ -65,7 +75,6 @@ class SignupForm extends Component {
                     <Form.Control
                         type="email"
                         name="email"
-                        placeholder="Email"
                         value={this.state.email}
                         onChange={this.handleChange}
                         required={true}
@@ -76,7 +85,6 @@ class SignupForm extends Component {
                         <Form.Control
                             type="password"
                             name="password"
-                            placeholder="Password"
                             value={this.state.password}
                             onChange={this.handleChange}
                             required={true}
@@ -87,7 +95,6 @@ class SignupForm extends Component {
                         <Form.Control
                             type="password"
                             name="repassword"
-                            placeholder="Password again"
                             value={this.state.repassword}
                             onChange={this.handleChange}
                             required={true}

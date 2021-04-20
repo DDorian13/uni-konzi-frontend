@@ -39,7 +39,7 @@ class UsersList extends Component {
         if (this.state.selectedUserId === "-1") {
             return;
         }
-        document.getElementById("newAdmin").style.display = "none";
+        document.getElementById("overlayOfNew").style.display = "none";
         fetch(GlobalValues.serverURL + "/users/" + this.state.selectedUserId, {
             method: "PATCH",
             headers: {
@@ -62,7 +62,7 @@ class UsersList extends Component {
         if(this.state.selectedUserId === "-1") {
             return;
         }
-        document.getElementById("deleteUser").style.display = "none";
+        document.getElementById("overlayOfDelete").style.display = "none";
 
         fetch(GlobalValues.serverURL + "/users/" + this.state.selectedUserId, {
             method: "DELETE",
@@ -96,23 +96,23 @@ class UsersList extends Component {
                 <div className="topRowContainer">
                     <Button
                         variant="info"
-                        onClick={() => document.getElementById("newAdmin").style.display = "flex"}
+                        onClick={() => document.getElementById("overlayOfNew").style.display = "flex"}
                     >
                         Admin jogosultság adása...
                     </Button>
                     <Button
                         variant="danger"
-                        onClick={() => document.getElementById("deleteUser").style.display = "flex"}
+                        onClick={() => document.getElementById("overlayOfDelete").style.display = "flex"}
                     >
                         Felhasználó törlése...
                     </Button>
                 </div>
 
-                <div id="newAdmin">
+                <div id="overlayOfNew">
                     <Form className="myForm" onSubmit={this.handleSubmitAdmin}>
                         <Button
                             variant="outline-danger"
-                            onClick={() => document.getElementById("newAdmin").style.display = "none"}
+                            onClick={() => document.getElementById("overlayOfNew").style.display = "none"}
                             className="fa fa-close formCloseButton"
                         />
                         <Form.Group>
@@ -131,11 +131,11 @@ class UsersList extends Component {
                     </Form>
                 </div>
 
-                <div id="deleteUser">
+                <div id="overlayOfDelete">
                     <Form className="myForm" onSubmit={this.handleSubmitDelete}>
                         <Button
                             variant="outline-danger"
-                            onClick={() => document.getElementById("deleteUser").style.display = "none"}
+                            onClick={() => document.getElementById("overlayOfDelete").style.display = "none"}
                             className="fa fa-close formCloseButton"
                         />
                         <Form.Group>

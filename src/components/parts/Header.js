@@ -16,8 +16,8 @@ class Header extends Component {
 
         let now = new Date();
         let date = `${now.getFullYear()}-`+
-            `${now.getMonth() < 10 ? "0" + now.getMonth() : now.getMonth()}-` +
-            `${now.getDay() < 10 ? "0" + now.getDay() : now.getDay()}T` +
+            `${now.getMonth()+1 < 10 ? "0" + (now.getMonth()+1) : (now.getMonth()+1)}-` +
+            `${now.getDate() < 10 ? "0" + now.getDate() : now.getDate()}T` +
             `${now.getHours() < 10 ? "0" + now.getHours() : now.getHours()}:` +
             `${now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()}`
 
@@ -153,13 +153,11 @@ class Header extends Component {
                         <NavDropdown id="basic-nav-dropdown-subscriptions" title="Konzultációk">
                             <NavDropdown.Item href="/subjects/tutor-of">Tartok...</NavDropdown.Item>
                             <NavDropdown.Item href="/subjects/pupil-of">Kértem...</NavDropdown.Item>
+                            <NavDropdown.Divider />
                             <NavDropdown.Item onClick={this.showDateReserve}>Időpont rögzítése...</NavDropdown.Item>
                         </NavDropdown>
                         {this.state.token != null && this.state.token.roles.filter(role => role === GlobalValues.adminRole).length > 0 &&
                         <NavDropdown title="Admin" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="/universities/new">Egyetem felvétele</NavDropdown.Item>
-                            <NavDropdown.Item href="/universities/newsubject">Tantárgy felvétele</NavDropdown.Item>
-                            <NavDropdown.Divider/>
                             <NavDropdown.Item href="/users">Felhasználók</NavDropdown.Item>
                         </NavDropdown>}
                         <Form inline onSubmit={this.handleSubmit}>

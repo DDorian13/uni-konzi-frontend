@@ -8,8 +8,7 @@ class NewUniversity extends Component {
         this.state = {
             name: "",
             country: "",
-            city: "",
-            responseMsg: ""
+            city: ""
         }
     }
 
@@ -39,22 +38,32 @@ class NewUniversity extends Component {
                     throw Error("Hiba");
                 }
                 return response.json();
-            }).then(response => this.setState({
-                responseMsg: "Az egyetem felvétele sikerült",
-                name: "",
-                country: "",
-                city: ""
-            })).catch(error => this.setState({
-                responseMsg: error.message
-            }));
+            }).then(response =>
+                this.setState({
+                    name: "",
+                    country: "",
+                    city: ""
+                }, () => {
+                    alert("Az egyetem felvétele sikerült");
+                    window.location.reload();
+                })
+            ).catch(error => {
+                console.log(error)
+                alert(error.message);
+        });
     }
 
     render() {
         GlobalValues.hasAdminRole(true);
 
         return (
-                <div className="myFormContainer">
+                <div id="overlayOfNew">
                     <Form className="myForm" onSubmit={this.handleSubmit}>
+                        <Button
+                            variant="outline-danger"
+                            onClick={() => document.getElementById("overlayOfNew").style.display="none"}
+                            className="fa fa-close formCloseButton"
+                        />
                         <Form.Label className="myFormWelcomeText">Egyetem felvétele</Form.Label>
                         <Form.Group>
                             <Form.Label>Egyetem neve</Form.Label>
@@ -62,7 +71,6 @@ class NewUniversity extends Component {
                                 type="text"
                                 name="name"
                                 value={this.state.name}
-                                placeholder="Név"
                                 onChange={this.handleChange}
                                 required={true}
                             />
@@ -73,7 +81,6 @@ class NewUniversity extends Component {
                                 type="text"
                                 name="country"
                                 value={this.state.country}
-                                placeholder="Ország"
                                 onChange={this.handleChange}
                                 required={true}
                             />
@@ -84,22 +91,11 @@ class NewUniversity extends Component {
                                 type="text"
                                 name="city"
                                 value={this.state.city}
-                                placeholder="Város"
                                 onChange={this.handleChange}
                                 required={true}
                             />
                         </Form.Group>
                         <Button type="submit" variant="info">Hozzáadás</Button>
-                        {
-                            this.state.responseMsg !== "" &&
-                                <Form.Label className={this.state.responseMsg === "Az egyetem felvétele sikerült" ?
-                                    "myFormSuccessText"
-                                    :
-                                    "myFormErrorText"}
-                                >
-                                    {this.state.responseMsg}
-                                </Form.Label>
-                        }
                     </Form>
                 </div>
         );

@@ -3,8 +3,6 @@ import LoginForm from "./components/authentication/LoginForm";
 import UniList from "./components/UniList";
 import SignupForm from "./components/authentication/SignupForm";
 import SubjectList from "./components/SubjectList";
-import NewUniversity from "./components/admin_only/NewUniversity";
-import NewSubject from "./components/admin_only/NewSubject";
 import Home from "./components/Home";
 import UsersList from "./components/admin_only/UsersList";
 import GlobalValues from "./global/GlobalValues";
@@ -42,10 +40,6 @@ class App extends Component {
             item = <LoginForm />;
         } else if (pathname === "/universities" || pathname === "/universities/search") {
             item = <UniList />;
-        } else if (pathname === "/universities/new") {
-            item = <NewUniversity />;
-        } else if (pathname === "/universities/newsubject") {
-            item = <NewSubject/>;
         } else if (pathname.search("^(/universities/([a-f]|[0-9]){24})$") !== -1) {
             item = <SubjectList />;
         } else if (pathname === "/users") {

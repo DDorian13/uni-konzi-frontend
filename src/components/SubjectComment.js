@@ -48,7 +48,7 @@ class SubjectComment extends Component {
                 this.setState({
                     response: response,
                     isLoading: false
-                });
+                }, () => this.scrollToBottom());
             })
             .catch(error => {
                 console.log(error);
@@ -103,7 +103,7 @@ class SubjectComment extends Component {
         }).then(response => {
             let newCommentList = this.state.response;
             newCommentList.comments.push(response);
-            this.setState({ response: newCommentList, comment: "" });
+            this.setState({ response: newCommentList, comment: "" }, () => this.scrollToBottom());
         }).catch(error => {
             console.log(error)
         })
@@ -137,6 +137,11 @@ class SubjectComment extends Component {
             });
     }
 
+    scrollToBottom = () => {
+        let element = document.getElementById("commentTableBody");
+        element.scrollTop = element.scrollHeight;
+    }
+
     render() {
         return (
                 <div className="commentContainer">
@@ -146,7 +151,7 @@ class SubjectComment extends Component {
                             "Loading..."
                             :
                             <Table striped bordered hover>
-                                <tbody style={{cursor: "text", overflowY: "auto", maxHeight: "70%"}}>
+                                <tbody className="commentTableBody" id="commentTableBody">
                                     {this.state.response.comments.map(comment => {
                                         return (
                                             <tr>

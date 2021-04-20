@@ -1,14 +1,15 @@
 import React, {Component} from "react";
 import TableList from "./parts/TableList";
-import {Button, Form} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import GlobalValues from "../global/GlobalValues";
+import NewSubject from "./admin_only/NewSubject";
+import DeleteSubject from "./admin_only/DeleteSubject";
 
 class SubjectList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            response: "",
-            selectedSubjectId: "-1"
+            response: ""
         }
     }
 
@@ -24,47 +25,6 @@ class SubjectList extends Component {
             url.searchParams.delete(key);
         })
         window.location = url;
-    }
-
-    handleChange = (event) => {
-        const {name, value} = event.target;
-        this.setState({ [name]: value});
-    }
-
-    handleSubmit = async (event) => {
-        event.preventDefault();
-        if (this.state.selectedSubjectId === "-1") {
-            return;
-        }
-        let success = true;
-
-        await fetch(GlobalValues.serverURL + `/universities/${this.state.response.id}/${this.state.selectedSubjectId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem(GlobalValues.tokenStorageName)
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw Error("Hiba");
-            }
-            return response.json();
-        })
-            .then(response => console.log(response))
-            .catch(error => {
-                console.log(error);
-                success = false;
-            })
-
-
-        document.getElementById("overlayForm").style.display = "none";
-        this.setState({selectedUniversityId: "-1"});
-        if (success) {
-            alert("A tantárgy törlése sikeresen megtörtént!");
-            window.location.reload();
-        } else {
-            alert("A tantárgy törlése sikertelen!");
-        }
     }
 
     render() {
@@ -93,38 +53,26 @@ class SubjectList extends Component {
                         <div className="topRowContainer">
                             <h2>{this.state.response.name}</h2>
                             <Button
+                                variant="info"
+                                onClick={() => document.getElementById("overlayOfNew").style.display="flex"}
+                            >
+                                Tantárgy hozzáadása...
+                            </Button>
+                            <Button
                                 variant="danger"
-                                onClick={() => document.getElementById("overlayForm").style.display="flex"}
+                                onClick={() => document.getElementById("overlayOfDelete").style.display="flex"}
                             >
                                 Tantárgy törlése...
                             </Button>
                         </div>
 
-                        <div id="overlayForm">
-                            <Form className="myForm" onSubmit={this.handleSubmit}>
-                                <Button
-                                    variant="outline-danger"
-                                    className="fa fa-close formCloseButton"
-                                    onClick={() => document.getElementById("overlayForm").style.display="none"}
-                                />
-                                <Form.Group>
-                                    <Form.Label>Törlendő tantárgy</Form.Label>
-                                    <Form.Control
-                                        as="select"
-                                        name="selectedSubjectId"
-                                        value={this.state.selectedSubjectId}
-                                        onChange={this.handleChange}
-                                    >
-                                        <option value="-1">Válasszon egy tantárgyat...</option>
-                                        {this.state.response !== "" && this.state.response.subjects.map(subject =>
-                                            <option value={subject.id}>{subject.name}</option>
-                                        )}
-                                    </Form.Control>
-                                    <Form.Text>Ez a művelet nem vonható vissza!</Form.Text>
-                                </Form.Group>
-                                <Button type="submit" variant="danger">Törlés</Button>
-                            </Form>
-                        </div>
+                        <NewSubject
+                            universityId={this.state.response.id}
+                        />
+
+                        <DeleteSubject
+                            university={this.state.response}
+                        />
                     </>
                     }
                     <TableList
