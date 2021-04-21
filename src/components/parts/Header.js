@@ -15,11 +15,15 @@ class Header extends Component {
         }
 
         let now = new Date();
+        const month = this.parseToDateFormat(now.getMonth() + 1);
+	const dayOfMonth = this.parseToDateFormat(now.getDate());
+        const hours = this.parseToDateFormat(now.getHours());
+        const minutes = this.parseToDateFormat(now.getMinutes());
         let date = `${now.getFullYear()}-`+
-            `${now.getMonth()+1 < 10 ? "0" + (now.getMonth()+1) : (now.getMonth()+1)}-` +
-            `${now.getDate() < 10 ? "0" + now.getDate() : now.getDate()}T` +
-            `${now.getHours() < 10 ? "0" + now.getHours() : now.getHours()}:` +
-            `${now.getMinutes() < 10 ? "0" + now.getMinutes() : now.getMinutes()}`
+            `${month}-` +
+            `${dayOfMonth}T` +
+            `${hours}:` +
+            `${minutes}`;
 
         this.state = {
             token: token,
@@ -36,7 +40,14 @@ class Header extends Component {
         }
     }
 
-    newMessage(token, decoded_token) {
+    parseToDateFormat = (value) => {
+       if (value < 10) {
+           return "0" + value;
+       }
+       return value;
+    }
+
+    newMessage = (token, decoded_token) => {
         fetch(GlobalValues.serverURL + "/messages/" + decoded_token.userId + "/has-new", {
             method: "GET",
             headers: {
