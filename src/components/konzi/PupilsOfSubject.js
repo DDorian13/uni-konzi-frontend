@@ -26,6 +26,12 @@ class PupilsOfSubject extends Component{
         }
 
         const token = localStorage.getItem(GlobalValues.tokenStorageName);
+
+        if (decodeJWT(token).userId === this.state.selectedUserId) {
+            alert("Saját magadnak nem tudsz konzultációt tartani!");
+            return;
+	}
+
         const body = {
             senderId: decodeJWT(token).userId,
             recipientId: this.state.selectedUserId
