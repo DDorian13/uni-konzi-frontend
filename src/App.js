@@ -13,6 +13,7 @@ import Chat from "./components/Chat";
 import TutorOf from "./components/konzi/TutorOf";
 import PupilOf from "./components/konzi/PupilOf";
 import PupilsOfSubject from "./components/konzi/PupilsOfSubject";
+import { Route, Switch } from "react-router-dom";
 
 class App extends Component {
     constructor() {
@@ -30,39 +31,48 @@ class App extends Component {
             }
         }
 
-        let item;
-        const pathname = window.location.pathname
-        if (pathname === "/") {
-            item = <Home />;
-        } else if (pathname === "/signup") {
-            item = <SignupForm />;
-        } else if (pathname === "/login") {
-            item = <LoginForm />;
-        } else if (pathname === "/universities" || pathname === "/universities/search") {
-            item = <UniList />;
-        } else if (pathname.search("^(/universities/([a-f]|[0-9]){24})$") !== -1) {
-            item = <SubjectList />;
-        } else if (pathname === "/users") {
-            item = <UsersList />;
-        } else if (pathname === "/chat") {
-            item = <Chat />;
-        } else if (pathname === "/subjects/tutor-of") {
-            item = <TutorOf />;
-        } else if (pathname === "/subjects/pupil-of") {
-            item = <PupilOf />;
-        } else if (pathname.search("^(/subjects/([a-f]|[0-9]){24})/pupils$") !== -1) {
-            item = <PupilsOfSubject />
-        } else if (pathname === "/subjects/search") {
-            item = <SubjectList search={true} />
-        } else if (pathname.search("^/subjects/([a-f]|[0-9]){24}") !== -1) {
-            item = <SubjectComment />;
-        }
-
         return (
             <>
                 <Header />
                 <title>Uni Konzi</title>
-                {item}
+                <Switch>
+                    <Route exact path="/">
+                        <Home />
+                    </Route>
+                    <Route exact path="/signup">
+                        <SignupForm />
+                    </Route>
+                    <Route exact path="/login">
+                        <LoginForm />
+                    </Route>
+                    <Route exact path={"/universities" || "/universities/search"}>
+                        <UniList />;
+                    </Route>
+                    <Route exact path="/universities/:universityId">
+                        <SubjectList />
+                    </Route>
+                    <Route exact path="/users">
+                        <UsersList />;
+                    </Route>
+                    <Route exact path="/chat">
+                        <Chat />;
+                    </Route>
+                    <Route exact path="/subjects/tutor-of">
+                        <TutorOf />;
+                    </Route>
+                    <Route exact path="/subjects/pupil-of">
+                        <PupilOf />;
+                    </Route>
+                    <Route exact path="/subjects/:subjectId/pupils">
+                        <PupilsOfSubject />
+                    </Route>
+                    <Route exact path="/subjects/search">
+                        <SubjectList search={true} />
+                    </Route>
+                    <Route exact path="/subjects/:subjectId">
+                        <SubjectComment />
+                    </Route>
+                </Switch>
             </>
         );
     }
